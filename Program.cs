@@ -1,9 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 using(var db = new AppDbContext())
 {
+    //populando produtos via código
+    SeedDataBase.SeedProdutos(db);
+
+    //exibe produtos
     var produtos = db.Produtos.ToList();
     foreach (var produto in produtos)
     {
@@ -14,7 +19,7 @@ using(var db = new AppDbContext())
 
 
 //entidades
-class Produto
+public class Produto
 {
     [Key]
     public int IdProduto { get; set; }
@@ -23,7 +28,7 @@ class Produto
     public int Estoque { get; set; }
 }
 
-class AppDbContext : DbContext
+public class AppDbContext : DbContext
 {
     //mapeamento da entidade para a tabela
     public DbSet<Produto> Produtos { get; set; }
