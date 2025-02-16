@@ -12,89 +12,161 @@ public class Program
     {
         using (var db = new AppDbContext())
         {
-            var produtoNovo = new Produto();
-            produtoNovo.Preco = 22.9M;
-            produtoNovo.Estoque = 10;
-            produtoNovo.Nome = "Caneta Tata";
+            //var produtoNovo = new Produto();
+            //produtoNovo.Preco = 22.9M;
+            //produtoNovo.Estoque = 10;
+            //produtoNovo.Nome = "Caneta Tata";
 
-            //para incluir somente um objeto no banco atráves do  ef
-            db.Add(produtoNovo);
-            db.SaveChanges();
+            ////para incluir somente um objeto no banco atráves do  ef
+            //db.Add(produtoNovo);
+            //db.SaveChanges();
 
-            //para incluir uma lista de objetos atraves do ef
-            var listaProdutos = new List<Produto>
-            {
-                new Produto { Nome="Teste1", Preco=11.22M, Estoque=1 },
-                new Produto { Nome="Teste2", Preco=11.22M, Estoque=1 },
+            ////para incluir uma lista de objetos atraves do ef
+            //var listaProdutos = new List<Produto>
+            //{
+            //    new Produto { Nome="Teste1", Preco=11.22M, Estoque=1 },
+            //    new Produto { Nome="Teste2", Preco=11.22M, Estoque=1 },
 
-            };
-            db.AddRange(listaProdutos);
-            db.SaveChanges();
-
-
-            //populando produtos via código (mesma coisa do de cima, porém com um método separado)
-            SeedDataBase.SeedProdutos(db);
-
-            //como deletar dados
-            var produtoASerDeletado = db.Produtos.First();
-            db.Produtos.Remove(produtoASerDeletado);
-            db.SaveChanges();
-            //Depois de qualquer alteração, é necessário utilizar o db.SaveChanges();
-
-            //Atualizar/Editar os produtos
-            var produtoASerAtualizado = db.Produtos.Where(p => p.IdProduto == 24).FirstOrDefault();
-            produtoASerAtualizado.Nome = "Caneta Fofa";
-            produtoASerAtualizado.Preco = 33.2M;
-            db.SaveChanges();
+            //};
+            //db.AddRange(listaProdutos);
+            //db.SaveChanges();
 
 
-            //Tem como utilizar só um SaveChanges para várias opções
-            //Se algo der falha, o Rollback será realizado
+            ////populando produtos via código (mesma coisa do de cima, porém com um método separado)
+            //SeedDataBase.SeedProdutos(db);
 
-            // INCLUIR PRODUTO
-            var produto = new Produto
-            {
-                Nome = "Pilha",
-                Preco = 9.99M,
-                Estoque = 99
-            };
+            ////como deletar dados
+            //var produtoASerDeletado = db.Produtos.First();
+            //db.Produtos.Remove(produtoASerDeletado);
+            //db.SaveChanges();
+            ////Depois de qualquer alteração, é necessário utilizar o db.SaveChanges();
 
-            db.Produtos.Add(produto);
-
-            // ALTERAR UM PRODUTO
-            var meuProduto = db.Produtos.Find(5);
-            meuProduto.Nome = "Nome do produto alterado";
-
-            // REMOVER UM PRODUTO
-            var ultimoProduto = db.Produtos.Last();
-            db.Produtos.Remove(ultimoProduto);
-
-            //somente 1 SaveChanges, em uma transação
-            db.SaveChanges();
+            ////Atualizar/Editar os produtos
+            //var produtoASerAtualizado = db.Produtos.Where(p => p.IdProduto == 24).FirstOrDefault();
+            //produtoASerAtualizado.Nome = "Caneta Fofa";
+            //produtoASerAtualizado.Preco = 33.2M;
+            //db.SaveChanges();
 
 
-            //Exibir o estados das entidades -
-            //ChangeTracker que monitora as entidades
-            //Estados:
-            //Não modificado: Unchanged
-            //Acabou de inserir a entidade: Added
-            //Entidade foi alterada: Modified
-            //Entidade foi excluida: Deleted
+            ////Tem como utilizar só um SaveChanges para várias opções
+            ////Se algo der falha, o Rollback será realizado
 
-            Console.WriteLine("1- Carga Inicial");
-            var produtos = db.Produtos;
-            foreach (var p in produtos)
-            {
-                System.Console.WriteLine(p.Nome);
-            }
+            //// INCLUIR PRODUTO
+            //var produto = new Produto
+            //{
+            //    Nome = "Pilha",
+            //    Preco = 9.99M,
+            //    Estoque = 99
+            //};
 
-            ExibirEstado(db.ChangeTracker.Entries());
+            //db.Produtos.Add(produto);
 
-            //Exibindo produtos no console
-            ExibirProdutos(db);
+            //// ALTERAR UM PRODUTO
+            //var meuProduto = db.Produtos.Find(5);
+            //meuProduto.Nome = "Nome do produto alterado";
+
+            //// REMOVER UM PRODUTO
+            //var ultimoProduto = db.Produtos.Last();
+            //db.Produtos.Remove(ultimoProduto);
+
+            ////somente 1 SaveChanges, em uma transação
+            //db.SaveChanges();
+
+
+            ////Exibir o estados das entidades -
+            ////ChangeTracker que monitora as entidades
+            ////Estados:
+            ////Não modificado: Unchanged
+            ////Acabou de inserir a entidade: Added
+            ////Entidade foi alterada: Modified
+            ////Entidade foi excluida: Deleted
+
+            //Console.WriteLine("1- Carga Inicial");
+            //var produtos = db.Produtos;
+            //foreach (var p in produtos)
+            //{
+            //    System.Console.WriteLine(p.Nome);
+            //}
+
+            //ExibirEstado(db.ChangeTracker.Entries());
+
+            ////Exibindo produtos no console
+            //ExibirProdutos(db);
+            IncluirAutorELivros();
         }
         Console.ReadLine();
     }
+
+    //Criar livros um por um e apontar qual o autor
+    private static void IncluirAutorLivrosAddRange()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            var autor = new Autor
+            {
+                Nome = "Stephen",
+                Sobrenome = "King",
+            };
+
+            var livros = new List<Livro>
+        {
+            new Livro { Titulo="Carrie", AnoLancamento= 1974, Autor= autor },
+            new Livro { Titulo = "A Coisa", AnoLancamento = 1986, Autor = autor },
+            new Livro { Titulo = "Angústia", AnoLancamento = 1987, Autor = autor }
+        };
+
+            contexto.AddRange(livros);
+            contexto.SaveChanges();
+        }
+    }
+
+    //Criar um autor com varios livros
+    private static void IncluirAutorELivros()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            var autor = new Autor
+            {
+                Nome = "Samuel",
+                Sobrenome = "Portes",
+                Livros = new List<Livro>
+            {
+                new Livro{Titulo="Mercado Financeiro", AnoLancamento=2024},
+                new Livro{Titulo="AI", AnoLancamento=2024}
+            }
+
+            };
+
+            contexto.Add(autor);
+            contexto.SaveChanges();
+        }
+    }
+
+    //Criar um autor
+    private static void IncluirAutor()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            var autor = new Autor { Nome = "Samuel", Sobrenome = "Portes" };
+            contexto.Add(autor);
+            contexto.SaveChanges();
+        }
+    }
+
+    //Inclui um Livro e referencia qual seu autor, ja existente
+    private static void IncluirLivroAutor()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            var autor = contexto.Autores.Find(1);
+
+            var livro = new Livro { Titulo = "A casa torta", AnoLancamento = 1949, Autor = autor };
+
+            contexto.Livros.Add(livro);
+            contexto.SaveChanges();
+        }
+    }
+
 
     private static void ExibirEstado(IEnumerable<EntityEntry> entries)
     {
