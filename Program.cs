@@ -108,6 +108,7 @@ public class Program
         {
             var autor = contexto.Autores.Where(a => a.Nome == "Samuel").FirstOrDefault();
             Console.WriteLine(autor.Nome);
+            //Entry é para acessar os relacionamentos de autor
             contexto.Entry(autor)
                 .Collection(l => l.Livros)
                 .Query().Where(l => l.AnoLancamento == 2024)
