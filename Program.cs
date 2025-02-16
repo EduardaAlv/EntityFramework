@@ -95,9 +95,44 @@ public class Program
 
 
             //ExibirAutores();
-            ExibirAutoresConsultaProjecao();
+            //ExibirAutoresConsultaProjecao();
+            ExibirDadosExplicitingLoading();
+            ExibirDadosExplicitingLoadingFiltrandoPorQuery();
         }
         Console.ReadLine();
+    }
+
+    private static void ExibirDadosExplicitingLoadingFiltrandoPorQuery()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            var autor = contexto.Autores.Where(a => a.Nome == "Samuel").FirstOrDefault();
+            Console.WriteLine(autor.Nome);
+            contexto.Entry(autor)
+                .Collection(l => l.Livros)
+                .Query().Where(l => l.AnoLancamento == 2024)
+                .Load();
+
+            foreach (var l in autor.Livros)
+            {
+                Console.WriteLine($"\t {l.Titulo}");
+            }
+        }
+    }
+
+    private static void ExibirDadosExplicitingLoading()
+    {
+        using (var contexto = new AppDbContext())
+        {
+           var autor = contexto.Autores.Where(a => a.Nome == "Samuel").FirstOrDefault();
+            Console.WriteLine(autor.Nome);
+            contexto.Entry(autor).Collection(l => l.Livros).Load();
+
+            foreach(var l in autor.Livros)
+            {
+                Console.WriteLine($"\t {l.Titulo}");
+            }
+        }
     }
 
     private static void ExibirAutoresConsultaProjecao()
