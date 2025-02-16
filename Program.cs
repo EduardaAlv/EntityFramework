@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using EntityFramework;
+using EntityFramework.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.ComponentModel.DataAnnotations;
@@ -128,6 +129,8 @@ public class AppDbContext : DbContext
 {
     //mapeamento da entidade para a tabela
     public DbSet<Produto> Produtos { get; set; }
+    public DbSet<Livro> Livros { get; set; }
+    public DbSet<Autor> Autores { get; set; }
 
     //o provedor e a string de conexão
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
