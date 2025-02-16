@@ -92,9 +92,59 @@ public class Program
 
             ////Exibindo produtos no console
             //ExibirProdutos(db);
-            IncluirAutorELivros();
+
+
+            //ExibirAutores();
+            ExibirAutoresConsultaProjecao();
         }
         Console.ReadLine();
+    }
+
+    private static void ExibirAutoresConsultaProjecao()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            var resultado = contexto.Autores.Where(a => a.Nome == "Samuel")
+                .Select(a => new
+                {
+                    Autor = a,
+                    LivrosAutor = a.Livros
+                })
+                .FirstOrDefault();
+
+            Console.WriteLine(resultado.Autor.Nome + " " + resultado.Autor.Sobrenome);
+            foreach (var livro in resultado.LivrosAutor)
+            {
+                Console.WriteLine("\t " + livro.Titulo);
+            }
+        }
+    }
+
+
+    private static void ExibirAutores()
+    {
+        using (var contexto = new AppDbContext())
+        {
+            //é preciso pedir para carregar os relacionamentos
+            //com o Include
+            //Pode utilizar mais de um Include
+            //E existe o ThenInclude, para pegar os relacionamentos dos relacionamentos
+
+            //Para otimizar toda essa busca, se for muitos relacionamentos
+            //Utilize o AsNoTracking(), para desativar o rastreamento dos estados das entidades
+            //FAZER ISSO SOMENTE QUANDO FOR LER OS DADOS
+
+            foreach (var autor in contexto.Autores.AsNoTracking().Include(a=> a.Livros))
+            {
+                Console.WriteLine($"{autor.Nome}  {autor.Sobrenome}");
+        
+                foreach(var livro in autor.Livros)
+                {
+                    Console.WriteLine($"\t {livro.Titulo}");
+                }
+            }
+        }
+
     }
 
     //Criar livros um por um e apontar qual o autor
