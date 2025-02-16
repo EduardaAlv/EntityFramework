@@ -39,7 +39,13 @@ public class Program
             db.SaveChanges();
             //Depois de qualquer alteração, é necessário utilizar o db.SaveChanges();
 
+            //Atualizar/Editar os produtos
+            var produtoASerAtualizado = db.Produtos.Where(p => p.IdProduto == 24).FirstOrDefault();
+            produtoASerAtualizado.Nome = "Caneta Fofa";
+            produtoASerAtualizado.Preco = 33.2M;
+            db.SaveChanges();
 
+            //Exibindo produtos no console
             ExibirProdutos(db);
         }
     }
