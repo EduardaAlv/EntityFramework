@@ -45,6 +45,32 @@ public class Program
             produtoASerAtualizado.Preco = 33.2M;
             db.SaveChanges();
 
+
+            //Tem como utilizar só um SaveChanges para várias opções
+            //Se algo der falha, o Rollback será realizado
+
+            // INCLUIR PRODUTO
+            var produto = new Produto
+            {
+                Nome = "Pilha",
+                Preco = 9.99M,
+                Estoque = 99
+            };
+
+            db.Produtos.Add(produto);
+
+            // ALTERAR UM PRODUTO
+            var meuProduto = db.Produtos.Find(5);
+            meuProduto.Nome = "Nome do produto alterado";
+
+            // REMOVER UM PRODUTO
+            var ultimoProduto = db.Produtos.Last();
+            db.Produtos.Remove(ultimoProduto);
+            
+            //somente 1 SaveChanges, em uma transação
+            db.SaveChanges();
+
+
             //Exibindo produtos no console
             ExibirProdutos(db);
         }
