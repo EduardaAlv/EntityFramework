@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.ComponentModel.DataAnnotations;
 
 public class Program
@@ -66,15 +67,42 @@ public class Program
             // REMOVER UM PRODUTO
             var ultimoProduto = db.Produtos.Last();
             db.Produtos.Remove(ultimoProduto);
-            
+
             //somente 1 SaveChanges, em uma transação
             db.SaveChanges();
 
 
+            //Exibir o estados das entidades -
+            //ChangeTracker que monitora as entidades
+            //Estados:
+            //Não modificado: Unchanged
+            //Acabou de inserir a entidade: Added
+            //Entidade foi alterada: Modified
+            //Entidade foi excluida: Deleted
+
+            Console.WriteLine("1- Carga Inicial");
+            var produtos = db.Produtos;
+            foreach (var p in produtos)
+            {
+                System.Console.WriteLine(p.Nome);
+            }
+
+            ExibirEstado(db.ChangeTracker.Entries());
+
             //Exibindo produtos no console
             ExibirProdutos(db);
         }
+        Console.ReadLine();
     }
+
+    private static void ExibirEstado(IEnumerable<EntityEntry> entries)
+    {
+        foreach (var entrada in entries)
+        {
+            Console.WriteLine($"Estado da entidade : {entrada.State.ToString()}");
+        }
+    }
+
     private static void ExibirProdutos(AppDbContext db)
     {
         //exibe produtos
