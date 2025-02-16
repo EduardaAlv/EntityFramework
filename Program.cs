@@ -3,21 +3,57 @@ using EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-using(var db = new AppDbContext())
+public class Program
 {
-    //populando produtos via código
-    SeedDataBase.SeedProdutos(db);
 
-    //exibe produtos
-    var produtos = db.Produtos.ToList();
-    foreach (var produto in produtos)
+    static void Main(string[] args)
     {
-        Console.WriteLine(produto.Nome);
+        using (var db = new AppDbContext())
+        {
+            var produtoNovo = new Produto();
+            produtoNovo.Preco = 22.9M;
+            produtoNovo.Estoque = 10;
+            produtoNovo.Nome = "Caneta Tata";
+
+            //para incluir somente um objeto no banco atráves do  ef
+            db.Add(produtoNovo);
+            db.SaveChanges();
+
+            //para incluir uma lista de objetos atraves do ef
+            var listaProdutos = new List<Produto>
+            {
+                new Produto { Nome="Teste1", Preco=11.22M, Estoque=1 },
+                new Produto { Nome="Teste2", Preco=11.22M, Estoque=1 },
+
+            };
+            db.AddRange(listaProdutos);
+            db.SaveChanges();
+
+
+            //populando produtos via código (mesma coisa do de cima, porém com um método separado)
+            SeedDataBase.SeedProdutos(db);
+
+            //como deletar dados
+            var produtoASerDeletado = db.Produtos.First();
+            db.Produtos.Remove(produtoASerDeletado);
+            db.SaveChanges();
+            //Depois de qualquer alteração, é necessário utilizar o db.SaveChanges();
+
+
+            ExibirProdutos(db);
+        }
     }
-    Console.ReadLine();
+    private static void ExibirProdutos(AppDbContext db)
+    {
+        //exibe produtos
+        var produtos = db.Produtos.ToList();
+        foreach (var produto in produtos)
+        {
+            Console.WriteLine(produto.Nome);
+        }
+        Console.ReadLine();
+    }
 }
-
-
 //entidades
 public class Produto
 {
