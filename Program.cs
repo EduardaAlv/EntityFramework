@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 public class Program
 {
-
     static void Main(string[] args)
     {
         using (var db = new AppDbContext())
@@ -125,11 +124,11 @@ public class Program
     {
         using (var contexto = new AppDbContext())
         {
-           var autor = contexto.Autores.Where(a => a.Nome == "Samuel").FirstOrDefault();
+            var autor = contexto.Autores.Where(a => a.Nome == "Samuel").FirstOrDefault();
             Console.WriteLine(autor.Nome);
             contexto.Entry(autor).Collection(l => l.Livros).Load();
 
-            foreach(var l in autor.Livros)
+            foreach (var l in autor.Livros)
             {
                 Console.WriteLine($"\t {l.Titulo}");
             }
@@ -170,11 +169,11 @@ public class Program
             //Utilize o AsNoTracking(), para desativar o rastreamento dos estados das entidades
             //FAZER ISSO SOMENTE QUANDO FOR LER OS DADOS
 
-            foreach (var autor in contexto.Autores.AsNoTracking().Include(a=> a.Livros))
+            foreach (var autor in contexto.Autores.AsNoTracking().Include(a => a.Livros))
             {
                 Console.WriteLine($"{autor.Nome}  {autor.Sobrenome}");
-        
-                foreach(var livro in autor.Livros)
+
+                foreach (var livro in autor.Livros)
                 {
                     Console.WriteLine($"\t {livro.Titulo}");
                 }
