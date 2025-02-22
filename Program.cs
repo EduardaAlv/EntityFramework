@@ -252,7 +252,6 @@ public class Program
         }
     }
 
-
     private static void ExibirEstado(IEnumerable<EntityEntry> entries)
     {
         foreach (var entrada in entries)
@@ -272,6 +271,7 @@ public class Program
         Console.ReadLine();
     }
 }
+
 //entidades
 public class Produto
 {
